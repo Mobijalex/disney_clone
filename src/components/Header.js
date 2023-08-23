@@ -1,6 +1,40 @@
 import styled from "styled-components";
+import { auth, provider } from "../components/Firebase";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { auth, provider } from "../components/Firebase";
+import {
+  selectUserName,
+  selectUserPhoto,
+  setUserLoginDetailes,
+} from "../features/user/UserSlice";
 
 const Header = (props) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const username = useSelector(selectUserName);
+  const userPhoto = useSelector(selectUserPhoto);
+
+  const handleAuth = () => {
+    auth
+      .signInWithPopup(provider)
+      .then((result) => {
+        setUser(result.user);
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
+
+  const setUser = (user) =>
+    dispatch(
+      setUserLoginDetailes({
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL,
+      })
+    );
+
   return (
     <Nav>
       <Logo>
@@ -33,7 +67,7 @@ const Header = (props) => {
         </a>
       </NavMenu>
 
-      <Login>Login</Login>
+      <Login onClick={handleAuth}>Login</Login>
     </Nav>
   );
 };
