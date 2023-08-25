@@ -1,5 +1,5 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
-import { useReducer } from "../features/user/UserSlice";
+import useReducer from "../features/user/UserSlice";
 
 export default configureStore({
   reducer: {
