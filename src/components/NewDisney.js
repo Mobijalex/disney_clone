@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "styled-components";
 import { Link } from "react-router-dom";
-import { UseSelector, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectNewDisney } from "../features/user/Movie/MovieSlice";
 
 function NewDisney(props) {
@@ -62,7 +62,7 @@ const Wrap = styled.div`
     top: 0;
   }
 
-  &hover {
+  &:hover {
     box-shadow: rgb(0 0 0 / 69%) 0px 26px 30px -10px,
       rgb(0 0 0 / 73%) 0px 16px 10px -10px;
     transform: scale(1.05);

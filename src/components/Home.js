@@ -23,7 +23,7 @@ const Home = (props) => {
   useEffect(() => {
     db.collection("Movies").onSnapshot((snapshot) => {
       snapshot.docs.map((doc) => {
-        console.log(recommends);
+        console.log(orginals);
         switch (doc.data().type) {
           case "recommend":
             recommends = [...recommends, { id: doc.id, ...doc.data() }];
@@ -31,10 +31,10 @@ const Home = (props) => {
           case "new":
             newDisneys = [...newDisneys, { id: doc.id, ...doc.data() }];
             break;
-          case "new":
+          case "original":
             orginals = [...orginals, { id: doc.id, ...doc.data() }];
             break;
-          case "new":
+          case "trending":
             trending = [...trending, { id: doc.id, ...doc.data() }];
             break;
         }
@@ -44,7 +44,7 @@ const Home = (props) => {
         setMovies({
           recommend: recommends,
           newDisney: newDisneys,
-          orginal: orginals,
+          original: orginals,
           trending: trending,
         })
       );
