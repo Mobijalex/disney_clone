@@ -1,20 +1,38 @@
 import React from "react";
 import { styled } from "styled-components";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import db from "../components/Firebase";
 
 function Details(props) {
+  const { id } = useParams();
+  const [detailData, setDetailData] = useState({});
+
+  useEffect(() => {
+    db.collection("Movies")
+      .doc(id)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          setDetailData(doc.data());
+        } else {
+          console.log("no such document in firebase");
+        }
+      })
+      .catch((error) => {
+        console.log("error getting document", error);
+      });
+  }, [id]);
+
+  console.log(detailData);
+
   return (
     <Container>
       <Background>
-        <img
-          alt=""
-          src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/B409C2A425D58C32D822EB633C7CAE3DC910DC2FC62D2B1807A0BB092C531E9A/scale?width=1440&aspectRatio=1.78&format=jpeg"
-        />
+        <img alt={detailData.title} src={detailData.backgroundImg} />
       </Background>
       <ImageTitle>
-        <img
-          alt=""
-          src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/2041CE26663867FC4EF20377B8625BD629E619452E23BCDB1AB259DD475C2EA1/scale?width=1440&aspectRatio=1.78"
-        />
+        <img alt={detailData.title} src={detailData.titleImg} />
       </ImageTitle>
       <ContentMeta>
         <Controls>
@@ -22,7 +40,23 @@ function Details(props) {
             <img src="/images/play-icon-black.png" alt="" />
             <Span>Play</Span>
           </Player>
+          <Trailer>
+            <img src="/images/play-icon-white.png" alt="" />
+            <Span>Trailer</Span>
+          </Trailer>
+          <AddList>
+            <span></span>
+            <span></span>
+          </AddList>
+
+          <GroupWatch>
+            <div>
+              <img src="/images/group-icon.png" alt="" />
+            </div>
+          </GroupWatch>
         </Controls>
+        <subTitle>{detailData.subTitle}</subTitle>
+        <Discription>{detailData.description}</Discription>
       </ContentMeta>
     </Container>
   );
@@ -34,7 +68,7 @@ const Container = styled.div`
   overflow-x: hidden;
   display: block;
   top: 72px;
-  padding: 0 calc(3.5 + 5px);
+  padding: 0 calc(3.5vw + 5px);
 `;
 
 const Background = styled.div`
@@ -96,8 +130,110 @@ const Player = styled.button`
   align-items: center;
   justify-content: center;
   letter-spacing: 1.8px;
+  text-align: center;
+  text-transform: uppercase;
+  background: rgb(249, 249, 249);
+  border: none;
+  color: rgb(0, 0, 0);
+
+  img {
+    width: 32px;
+  }
+
+  &:hover {
+    background: rgb(198, 198, 198);
+  }
+
+  @media (max-width: 768px) {
+    height: 45px;
+    padding: 0px 12px;
+    font-size: 12px;
+    margin: 0px 10px 0px;
+
+    img {
+      width: 25px;
+    }
+  }
 `;
 
 const Span = styled.div``;
+
+const Trailer = styled(Player)`
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgb(249, 249, 249);
+  color: rgb(249, 249, 249);
+`;
+
+const AddList = styled.div`
+  margin-right: 16px;
+  height: 44px;
+  width: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  border: 2px solid white;
+  cursor: pointer;
+
+  span {
+    background-color: rgb(249, 249, 249);
+    display: inline-block;
+
+    &:first-child {
+      height: 2px;
+      transform: translate(1px, 0px) rotate(0deg);
+      width: 16px;
+    }
+
+    &:nth-child(2) {
+      height: 16px;
+      transform: translateX(-8px) rotate(0deg);
+      width: 2px;
+    }
+  }
+`;
+
+const GroupWatch = styled.div`
+  height: 44px;
+  width: 44px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background: white;
+
+  div {
+    height: 40px;
+    width: 40px;
+    background: rgb(0, 0, 0);
+    border-radius: 50%;
+
+    img {
+      width: 100%;
+    }
+  }
+`;
+const subTitle = styled.div`
+  color: rgb(249, 249, 249);
+  font-size: 15px;
+  min-height: 20px;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+`;
+
+const Discription = styled.div`
+  line-height: 1.4;
+  font-size: 20px;
+  padding: 16px 0px;
+  color: rgb(249, 249, 249);
+
+  @media (max-width: 769px) {
+    font-size: 14px;
+  }
+`;
 
 export default Details;
